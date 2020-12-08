@@ -1,7 +1,7 @@
 <template>
     <div class="customInput" >
-        <input type="text" name="inputName" class="customInput__input" :value="title" @input="updateValue($event.target.value)">
-        <label class="customInput__placeholder" for="inputName">{{ placeholder }}</label>
+        <input type="text" :name="placeholder" class="customInput__input" :value="value" @input="updateValue($event.target.value)">
+        <label class="customInput__placeholder" :for="placeholder">{{ placeholder }}</label>
     </div>
 </template>
 
@@ -9,8 +9,9 @@
     export default {
         name: "v-input",
         props:{
-            title:{
-                type: String
+            value:{
+                type: String,
+                default: ''
             },
             placeholder:{
                 type: String,

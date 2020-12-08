@@ -1,26 +1,43 @@
 <template>
     <div class="contactPage">
         <h1 class="contactPage__title title">Страница контактов</h1>
-        <v-button @click="clickButton" type="info">Добавить контакт</v-button>
-        <v-add-contact-modal @close="closeModal" :show="visible"></v-add-contact-modal>
+        <div class="contactPage__btn">
+            <v-button @click="clickButton" type="info">Добавить контакт</v-button>
+        </div>
+        <div class="contactPage__modal">
+            <v-add-contact-modal @addContactToPage="addContactToPage" @close="closeModal" :show="visible"></v-add-contact-modal>
+        </div>
+        <div class="contactPage__list contactPage__list-mt">
+            <v-contact-list :contacts="items"></v-contact-list>
+        </div>
     </div>
 </template>
 
 <script>
+    import VContactList from '@/components/contact-list/v-contact-list';
     import VButton from '@/components/button/v-button';
     import VAddContactModal from "../components/modal/v-add-contact-modal";
     export default {
         name: "Contacts",
         components:{
             VAddContactModal,
-            VButton
+            VButton,
+            VContactList
         },
         data(){
           return {
-              visible: false
+              visible: false,
+              items: []
           }
         },
+        mounted(){
+            this.items = localStorage.getItem('contacts') ? JSON.parse(localStorage.getItem('contacts')) : [];
+        },
         methods:{
+            addContactToPage(itemsParty){
+                console.log(itemsParty);
+                this.items.push(itemsParty);
+            },
             clickButton(){
                 this.visible = !this.visible;
             },
@@ -39,6 +56,12 @@
         display: flex;
         align-items: center;
         flex-direction: column;
+
+        &__list{
+            &-mt{
+                margin-top: 2em;
+            }
+        }
     }
 
 

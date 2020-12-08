@@ -22,7 +22,7 @@
                     <v-button @click="closeModal">Закрыть</v-button>
                 </div>
                 <div class="addContactModal__btn addContactModal__btn-submit">
-                    <v-button @click="saveRecords" type="info">Добавить контакт</v-button>
+                    <v-button @click="addContact" type="info">Добавить контакт</v-button>
                 </div>
             </div>
         </div>
@@ -55,22 +55,36 @@
                 },
                 firstName: '',
                 lastName: '',
-                email: ''
+                email: '',
+                itemsArray: []
             }
+        },
+        created() {
+            this.itemsArray = localStorage.getItem('contacts') ? JSON.parse(localStorage.getItem('contacts')) : [];
         },
         methods:{
             closeModal(){
                 this.$emit('close');
             },
-            saveRecords(){
-                let itemsArray = [];
-                itemsArray.push(this.firstName, this.lastName, this.email);
-                localStorage.setItem('contacts', JSON.stringify(itemsArray));
-                // const data = JSON.parse(localStorage.getItem('items'))
-                this.firstName = '';
-                this.lastName = '';
-                this.email = '';
+            addContact(){
+                let items = {
+                    'firstName': this.firstName,
+                    'lastName': this.lastName,
+                    'email': this.email
+                };
+                if(!items) return;
+                this.itemsArray.push(items);
+                this.firstName = ' ';
+                this.lastName = ' ';
+                this.email = ' ';
+                this.saveContacts();
+                this.$emit('addContactToPage', items);
+            },
+            saveContacts() {
+                let parsed = JSON.stringify(this.itemsArray);
+                localStorage.setItem('contacts', parsed);
             }
+
         }
     }
 </script>
