@@ -7,8 +7,7 @@
             </h2>
             <p class="contactItem__mail">
                 {{ email }}
-                <v-button @click="removeContact" type="danger">Удалить</v-button>
-
+                <v-button @click="callRemoveConfirm" type="danger">Удалить</v-button>
             </p>
 
         </div>
@@ -35,8 +34,8 @@
             }
         },
         methods:{
-            removeContact(){
-                console.log('remove');
+            callRemoveConfirm(){
+                this.$emit('callRemoveConfirm');
             }
         }
 
