@@ -63,6 +63,15 @@
             border-color: #1e7e34;
         }
     }
+    &.edit{
+        color: #000;
+        background-color: #ffc107;
+        border-color: #ffc107;
+        &:hover{
+            background-color: #ffca2c;
+            border-color: #ffc720;
+        }
+    }
     &.info {
         background-color: #007bff;
         border-color: #007bff;

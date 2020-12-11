@@ -35,7 +35,6 @@
         },
         methods:{
             addContactToPage(itemsParty){
-                console.log(itemsParty);
                 this.items.push(itemsParty);
             },
             clickButton(){

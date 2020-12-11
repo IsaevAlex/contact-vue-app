@@ -6,6 +6,7 @@
                     :firstName="contact.firstName"
                     :lastName = "contact.lastName"
                     :email = "contact.email"
+                    :index="index"
                     :key="index"
                     @callRemoveConfirm="callRemoveConfirm(index)"
             />

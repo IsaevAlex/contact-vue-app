@@ -1,18 +1,15 @@
 <template>
     <v-modal class="addContactModal" v-show="show">
         <div slot="header">
-            <h2 class="addContactModal__header">Добавление контакта</h2>
+            <h2 class="addContactModal__header">Добавление полей в контакт</h2>
         </div>
         <div slot="body">
             <div class="addContactModal__body">
                 <div class="addContactModal__input addContactModal__input-mb">
-                    <v-input :placeholder="placeholders.firstName" v-model="firstName"></v-input>
+                    <v-input :placeholder="placeholders.newName" v-model="newName"></v-input>
                 </div>
                 <div class="addContactModal__input addContactModal__input-mb">
-                    <v-input :placeholder="placeholders.lastName" v-model="lastName"></v-input>
-                </div>
-                <div class="addContactModal__input">
-                    <v-input :placeholder="placeholders.email" v-model="email"></v-input>
+                    <v-input :placeholder="placeholders.newValue" v-model="newValue"></v-input>
                 </div>
             </div>
         </div>
@@ -22,7 +19,7 @@
                     <v-button @click="closeModal">Закрыть</v-button>
                 </div>
                 <div class="addContactModal__btn addContactModal__btn-submit">
-                    <v-button @click="addContact" type="info">Добавить контакт</v-button>
+                    <v-button @click="addValuesToContact" type="info">Добавить поля</v-button>
                 </div>
             </div>
         </div>
@@ -49,13 +46,11 @@
         data(){
             return{
                 placeholders: {
-                    firstName: 'Имя',
-                    lastName: 'Фамилия',
-                    email: 'Email'
+                    newName: 'Новое имя поля',
+                    newValue: 'Новое значение'
                 },
-                firstName: '',
-                lastName: '',
-                email: '',
+                newName: '',
+                newValue: '',
                 itemsArray: []
             }
         },
@@ -66,18 +61,16 @@
             closeModal(){
                 this.$emit('close');
             },
-            addContact(){
-                let items = {
-                    'firstName': this.firstName.trim(),
-                    'lastName': this.lastName.trim(),
-                    'email': this.email.trim()
-                };
-                if(!items) return;
-                this.itemsArray.push(items);
-                this.firstName = ' ';
-                this.lastName = ' ';
-                this.email = ' ';
-                this.saveContacts();
+            addValuesToContact(){
+                let items = {};
+                items[this.newName.trim()] = this.newValue.trim();
+                this.$emit('addValuesToContact', items);
+                // if(!items) return;
+                // this.itemsArray.push(items);
+                this.newName = ' ';
+                this.newValue = ' ';
+                items = {};
+                // this.saveContacts();
                 this.$emit('addContactToPage', items);
             },
             saveContacts() {

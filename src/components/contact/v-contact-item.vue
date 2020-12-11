@@ -13,7 +13,9 @@
                     <v-button @click="callRemoveConfirm" type="danger">Удалить</v-button>
                 </div>
                 <div class="contactItem__more contactItem__btn">
-                    <v-button type="info">Подробнее</v-button>
+                    <router-link :to="{name: 'Contact', params: {id: index } }">
+                        <v-button type="info">Подробнее</v-button>
+                    </router-link>
                 </div>
             </div>
 
@@ -38,6 +40,10 @@
             },
             email: {
                 type: String
+            },
+            index:{
+                type: Number,
+                required: true
             }
         },
         methods:{

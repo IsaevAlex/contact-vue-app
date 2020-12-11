@@ -37,7 +37,7 @@
         },
         methods:{
             closeModal(){
-                this.$emit('closeModal');
+                this.$emit('close');
             },
             removeContact(){
                 this.$emit('removeContact');

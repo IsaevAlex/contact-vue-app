@@ -39,7 +39,6 @@
             font-family: 'Lato', sans-serif;
             position: absolute;
             top: 50%;
-            transform: translate(#{$label-padding}, -50%);
             pointer-events: none;
             transition: all .14s ease-in-out;
             font-size:18px;
@@ -51,9 +50,9 @@
         &__input{
             color: #000;
             border:none;
-            padding: $label-padding;
             margin-top:20px;
             font-size: 16px;
+            padding-top: 5px;
             display: block;
             box-sizing: border-box;
             width: 100%;
@@ -71,7 +70,6 @@
                     font-size: 11px;
                     //Come up with a calculation for this
                     top: calc(30% - .5rem);
-                    transform: translate(#{$label-padding}, 0%);
                 }
             }
 
