@@ -6,7 +6,7 @@
         <div slot="body">
             <div class="addContactModal__body">
                 <div class="addContactModal__input addContactModal__input-mb">
-                    <v-input :placeholder="placeholders.firstName" v-model="firstName"></v-input>
+                    <v-input :autofocus="autofocus" :placeholder="placeholders.firstName" v-model="firstName"></v-input>
                 </div>
                 <div class="addContactModal__input addContactModal__input-mb">
                     <v-input :placeholder="placeholders.lastName" v-model="lastName"></v-input>
@@ -53,10 +53,21 @@
                     lastName: 'Фамилия',
                     email: 'Email'
                 },
+                autofocus: false,
                 firstName: '',
                 lastName: '',
                 email: '',
                 itemsArray: []
+            }
+        },
+        watch:{
+            show(value){
+                if (value){
+                    this.autofocus = true;
+                }
+                else{
+                    this.autofocus = false;
+                }
             }
         },
         created() {

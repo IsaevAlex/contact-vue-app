@@ -14,12 +14,12 @@
         <div class="contactList__list" v-else>
             <h3 class="no-data">Нет контактов</h3>
         </div>
-        <v-remove-confirm-modal @removeContact="removeContact" @closeModal="closeModal" :show="modalShow"></v-remove-confirm-modal>
+        <v-confirm-modal type="remove" @removeContact="removeContact" @closeModal="closeModal" :show="modalShow"></v-confirm-modal>
     </div>
 </template>
 
 <script>
-    import VRemoveConfirmModal from '@/components/confirm/v-remove-confirm-modal';
+    import VConfirmModal from '@/components/confirm/v-confirm-modal';
     import VContactItem from '@/components/contact/v-contact-item';
     export default {
         name: "v-contact-list",
@@ -31,7 +31,7 @@
         },
         components:{
             VContactItem,
-            VRemoveConfirmModal
+            VConfirmModal
         },
         props:{
             contacts: {

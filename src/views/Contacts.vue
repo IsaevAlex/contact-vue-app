@@ -8,7 +8,7 @@
             <v-add-contact-modal @addContactToPage="addContactToPage" @close="closeModal" :show="visible"></v-add-contact-modal>
         </div>
         <div class="contactPage__list contactPage__list-mt">
-            <v-contact-list :contacts="items"></v-contact-list>
+            <v-contact-list :contacts="reverseItems"></v-contact-list>
         </div>
     </div>
 </template>
@@ -32,6 +32,11 @@
         },
         mounted(){
             this.items = localStorage.getItem('contacts') ? JSON.parse(localStorage.getItem('contacts')) : [];
+        },
+        computed:{
+          reverseItems(){
+              return [...this.items].reverse();
+            }
         },
         methods:{
             addContactToPage(itemsParty){

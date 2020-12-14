@@ -6,7 +6,14 @@
         </div>
         <div class="contactPage__content contactPage__content-ml" >
             <div v-for="(value, key) in contact" :key="key">
-                <div>
+                <div v-if="editForm === key">
+                        <h2>Редактирование</h2>
+                        <v-input :placeholder="key" v-model="values.key.newKey"></v-input>
+                        <v-input :placeholder="value" v-model="values.value.newValue"></v-input>
+                    <v-button  @click="callSaveModal" type="info">Сохранить</v-button>
+                    <v-button  @click="callExitModal">Отмена</v-button>
+                </div>
+                <div v-else>
                     <h6>{{ key }}</h6>
                     <H2>{{ value }}</H2>
                     <div style="display: flex">
@@ -14,7 +21,7 @@
                             <v-button @click="callRemoveModal(key)" type="danger">Удалить</v-button>
                         </div>
                         <div>
-                            <v-button @click="editContactValue" type="edit">Редактировать</v-button>
+                            <v-button @click="editContactValue(value,key)" type="edit">Редактировать</v-button>
                         </div>
                     </div>
                 </div>
@@ -33,40 +40,101 @@
                 <!--{{ contact.email }}-->
             <!--</div>-->
         </div>
-        <v-remove-confirm-modal @removeContact="removeValuesFromContact" @close="closeModal" :show="showRemoveModal"></v-remove-confirm-modal>
+        <v-confirm-modal
+                type="exit"
+                title="Отмена редактирования"
+                description="Вы действительно хотите отменить редактирование?"
+                @exitEditContact="exitEditContact"
+                @close="closeModal"
+                :show="showExitModal"
+        />
+        <v-confirm-modal
+                type="save"
+                title="Редактирование записи"
+                description="Вы действительно хотите обновить запись?"
+                @saveEditChanges="saveEditChanges"
+                @close="closeSaveModal"
+                :show="showSaveModal"
+        />
+        <v-confirm-modal
+                type="remove"
+                title="Удаление записи"
+                description="Вы действительно хотите удалить запись?"
+                @removeContact="removeValuesFromContact"
+                @close="closeModal"
+                :show="showRemoveModal"
+        />
         <v-add-values-to-contact-modal @addValuesToContact="addValuesToContact" @close="closeModal" :show="showModal"></v-add-values-to-contact-modal>
     </div>
 </template>
 
 <script>
-    import VRemoveConfirmModal from '@/components/confirm/v-remove-confirm-modal';
+    import VInput from '@/components/input/v-input';
+    import VConfirmModal from '@/components/confirm/v-confirm-modal';
     import VAddValuesToContactModal from '@/components/modal/v-add-values-to-contact-modal';
     import VButton from '@/components/button/v-button';
 
     export default {
         name: "Contact",
         components:{
-            VRemoveConfirmModal,
+            VInput,
+            VConfirmModal,
             VButton,
             VAddValuesToContactModal
         },
         data(){
             return{
+                values:{
+                    key: {
+                        oldKey: '',
+                        newKey: ''
+                    },
+                    value: {
+                        oldValue: '',
+                        newValue: ''
+                    }
+                },
+                showSaveModal: false,
+                title: 'qweqwe',
                 contact: null,
                 contacts: [],
                 showModal: false,
                 showRemoveModal: false,
-                contactValueKey: null
+                showExitModal: false,
+                contactValueKey: null,
+                editForm: null
             }
         },
         created(){
-            this.contacts = localStorage.getItem('contacts') ? JSON.parse(localStorage.getItem('contacts')) : [];
+            this.contacts = localStorage.getItem('contacts') ? JSON.parse(localStorage.getItem('contacts')).reverse() : [];
             let contactId = this.$route.params.id;
             this.contact = this.contacts[contactId];
         },
         methods:{
-            editContactValue(){
-              console.log('edew');
+            exitEditContact(){
+                this.editForm = null;
+                this.showExitModal = false;
+            },
+            saveEditChanges(){
+                if (this.values.key.oldKey !== this.values.key.newKey) {
+                    this.contact[this.values.key.newKey] = this.contact[this.values.key.oldKey];
+                    delete this.contact[this.values.key.oldKey];
+                }
+                if (this.values.value.oldValue !== this.values.value.newValue){
+                    console.log(this.contact[this.values.key.oldValue]);
+                    this.contact[this.values.key.oldKey] = this.values.value.newValue;
+                }
+                this.editForm = null;
+                this.showSaveModal = false;
+                this.saveContacts(this.contacts);
+
+            },
+            editContactValue(value,key){
+              this.editForm = key;
+              this.values.key.newKey = key;
+              this.values.key.oldKey = key;
+              this.values.value.newValue = value;
+              this.values.value.oldValue = value;
             },
             removeValuesFromContact(){
                 delete this.contact[this.contactValueKey];
@@ -74,6 +142,12 @@
                 this.showRemoveModal = false;
                 this.contacts[contactId] = this.contact;
                 this.saveContacts(this.contacts);
+            },
+            callExitModal(){
+                this.showExitModal = true;
+            },
+            callSaveModal(){
+                this.showSaveModal = true;
             },
             callRemoveModal(key){
               this.showRemoveModal = true;
@@ -85,15 +159,21 @@
             closeModal(){
                 this.showModal = false;
                 this.showRemoveModal = false;
+                this.showExitModal = false;
+            },
+            closeSaveModal(){
+                this.showSaveModal = false;
+                this.values.key.newKey = this.values.key.oldKey;
+                this.values.value.newValue = this.values.value.oldValue;
             },
             addValuesToContact(items){
                 let contactId = this.$route.params.id;
-                this.contact = Object.assign(items, this.contact);
+                this.contact = Object.assign(this.contact, items);
                 this.contacts[contactId] = this.contact;
                 this.saveContacts(this.contacts);
             },
             saveContacts(contacts) {
-                let parsed = JSON.stringify(contacts);
+                let parsed = JSON.stringify(contacts.reverse());
                 localStorage.setItem('contacts', parsed);
             }
         }

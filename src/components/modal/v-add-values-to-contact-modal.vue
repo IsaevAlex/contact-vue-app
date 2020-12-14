@@ -55,7 +55,7 @@
             }
         },
         created() {
-            this.itemsArray = localStorage.getItem('contacts') ? JSON.parse(localStorage.getItem('contacts')) : [];
+            this.itemsArray = localStorage.getItem('contacts') ? JSON.parse(localStorage.getItem('contacts')).reverse() : [];
         },
         methods:{
             closeModal(){

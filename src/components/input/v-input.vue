@@ -1,6 +1,6 @@
 <template>
     <div class="customInput" >
-        <input type="text" :name="placeholder" class="customInput__input" :value="value" @input="updateValue($event.target.value)">
+        <input type="text" ref="input" :name="placeholder" class="customInput__input" :value="value" @input="updateValue($event.target.value)">
         <label class="customInput__placeholder" :for="placeholder">{{ placeholder }}</label>
     </div>
 </template>
@@ -16,11 +16,22 @@
             placeholder:{
                 type: String,
                 default: ' '
+            },
+            autofocus:{
+                type: Boolean,
+                default: false
             }
         },
         methods:{
             updateValue(value){
                 this.$emit('input', value);
+            }
+        },
+        watch:{
+            autofocus(newVal){
+                if (newVal){
+                    this.$refs.input.focus();
+                }
             }
         }
     }
