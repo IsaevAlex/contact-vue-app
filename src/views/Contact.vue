@@ -1,44 +1,45 @@
 <template>
-    <div class="contactPage contactPage-margin">
-        <div class="contactPage__profile">
-            <img class="contactPage__img" src="https://www.fillmurray.com/460/300" alt="">
+    <div class="contactProfile contactProfile-margin">
+        <div class="contactProfile__profile">
+            <img class="contactProfile__img" src="../assets/images/user-profile.svg" alt="">
             <v-button @click="openAddValuesModal" type="info">Добавить новые поля</v-button>
+            <v-button @click="backStepAction" type="success">Отменить действие</v-button>
+
         </div>
-        <div class="contactPage__content contactPage__content-ml" >
-            <div v-for="(value, key) in contact" :key="key">
-                <div v-if="editForm === key">
-                        <h2>Редактирование</h2>
-                        <v-input :placeholder="key" v-model="values.key.newKey"></v-input>
-                        <v-input :placeholder="value" v-model="values.value.newValue"></v-input>
-                    <v-button  @click="callSaveModal" type="info">Сохранить</v-button>
-                    <v-button  @click="callExitModal">Отмена</v-button>
+        <div class="contactProfile__content" >
+            <div v-for="(value, key) in contact" :key="key" class="contactProfile__item contactProfile__item-mb contactProfileItem">
+                <div v-if="editForm === key" class="contactProfileItem__edit contactProfileItemEdit">
+                    <h5 class="contactProfileItemEdit__title contactProfileItemEdit__title-margin">Редактирование</h5>
+                    <div class="contactProfileItemEdit__inputs">
+                        <div class="contactProfileItemEdit__input">
+                            <v-input :placeholder="key" v-model="values.key.newKey"></v-input>
+                        </div>
+                        <div class="contactProfileItemEdit__input">
+                            <v-input :placeholder="value" v-model="values.value.newValue"></v-input>
+                        </div>
+                    </div>
+                    <div class="contactProfileItemEdit__btns contactProfileItemEdit__btns-mt">
+                        <div class="contactProfileItemEdit__btn contactProfileItemEdit__btn-mr">
+                            <v-button  @click="callExitModal">Отмена</v-button>
+                        </div>
+                        <div class="contactProfileItemEdit__btn">
+                            <v-button  @click="callSaveModal" type="info">Сохранить</v-button>
+                        </div>
+                    </div>
                 </div>
-                <div v-else>
-                    <h6>{{ key }}</h6>
-                    <H2>{{ value }}</H2>
-                    <div style="display: flex">
-                        <div style="margin-right: 8px">
+                <div v-else class="contactProfileItem__info">
+                    <span class="contactProfileItem__subTitle contactProfileSubTitle">{{ key }}</span>
+                    <span class="contactProfileItem__title contactProfileTitle">{{ value }}</span>
+                    <div class="contactProfileItem__btns contactProfileItem__btns-mt">
+                        <div class="contactProfileItem__btn contactProfileItem__btn-mr">
                             <v-button @click="callRemoveModal(key)" type="danger">Удалить</v-button>
                         </div>
-                        <div>
+                        <div class="contactProfileItem__btn">
                             <v-button @click="editContactValue(value,key)" type="edit">Редактировать</v-button>
                         </div>
                     </div>
                 </div>
-
-
             </div>
-            <!--<div class="contactPage__header contactPage__header-mb">-->
-                <!--<div class="contactTitle contactPage__name">-->
-                    <!--{{ contact.firstName }}-->
-                <!--</div>-->
-                <!--<div class="contactTitle contactPage__firstname">-->
-                    <!--{{ contact.lastName }}-->
-                <!--</div>-->
-            <!--</div>-->
-            <!--<div class="contactPage__mail">-->
-                <!--{{ contact.email }}-->
-            <!--</div>-->
         </div>
         <v-confirm-modal
                 type="exit"
@@ -111,6 +112,9 @@
             this.contact = this.contacts[contactId];
         },
         methods:{
+            backStepAction(){
+                console.log('back action');
+            },
             exitEditContact(){
                 this.editForm = null;
                 this.showExitModal = false;
@@ -181,38 +185,133 @@
 </script>
 
 <style lang="scss" scoped>
-    .contactPage{
-        display: flex;
-        &-margin{
-            margin: 2em;
-        }
-        &__profile{
-            display: flex;
-            flex-direction: column;
-        }
-        &__img{
-            border-radius: 10px;
-            margin-bottom: 1em;
-        }
-        &__content{
-            &-ml{
-                margin-left: 1em;
+    .contactProfileItemEdit{
+        &__title{
+            font-size: 1.75em;
+            color: #3d3d3d;
+            font-weight: bold;
+            font-family: 'Lato', sans-serif;
+            word-break: break-all;
+
+            &-margin{
+                margin-top: 0;
+                margin-bottom: 12px;
             }
         }
 
-        &__header{
+        &__btns{
+            display: flex;
+            justify-content: flex-end;
+
+            &-mt{
+                margin-top: 12px;
+            }
+        }
+
+        &__btn{
+            &-mr{
+                margin-right: 8px;
+            }
+        }
+
+        &__inputs{
+            display: grid;
+            grid-template-columns: 1fr;
+            grid-gap: 16px;
+
+            @media screen and (min-width: 992px){
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+    }
+
+    .contactProfileItem{
+        &__info{
+            display: flex;
+            flex-direction: column;
+        }
+
+        &__btn{
+            &-mr{
+                margin-right: 8px;
+            }
+        }
+
+        &__btns{
+            display: flex;
+
+            &-mt{
+                margin-top: 8px;
+            }
+        }
+    }
+
+    .contactProfileSubTitle{
+        font-size: 1em;
+        color: #3d3d3d;
+        font-family: 'Lato', sans-serif;
+        word-break: break-all;
+    }
+
+    .contactProfileTitle{
+        font-size: 2em;
+        color: #3d3d3d;
+        font-weight: bold;
+        font-family: 'Lato', sans-serif;
+        word-break: break-all;
+    }
+
+
+    .contactProfile{
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-gap: 1em;
+
+        @media screen and (min-width: 600px){
+            grid-template-columns: 1fr 1fr;
+        }
+
+        @media screen and (min-width: 992px){
+            grid-template-columns: 1fr 2fr;
+        }
+
+        @media screen and (min-width: 1200px){
+            grid-template-columns: 1fr 3fr;
+            grid-gap: 2em;
+        }
+
+        @media screen and (min-width: 1400px){
+            grid-template-columns: 300px 700px;
+        }
+
+        &-margin{
+            margin: 1em;
+
+            @media screen and (min-width: 500px) {
+                margin: 2em;
+            }
+        }
+
+        &__item{
             &-mb{
                 margin-bottom: 1em;
             }
         }
 
-        &__mail{
-            font-size: 2.5rem;
-            letter-spacing: .1rem;
-            color: #3d3d3d;
-            font-family: 'Lato', sans-serif;
+        &__profile{
+            display: flex;
+            flex-direction: column;
         }
 
+        &__img{
+            border-radius: 10px;
+            margin-bottom: 1em;
+            max-height: 200px;
+
+            @media screen and (min-width: 600px) {
+                max-height: auto;
+            }
+        }
     }
 
     .contactTitle{

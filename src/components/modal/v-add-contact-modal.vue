@@ -83,13 +83,16 @@
                     'lastName': this.lastName.trim(),
                     'email': this.email.trim()
                 };
-                if(!items) return;
-                this.itemsArray.push(items);
-                this.firstName = ' ';
-                this.lastName = ' ';
-                this.email = ' ';
-                this.saveContacts();
-                this.$emit('addContactToPage', items);
+                if ((this.firstName.length > 0) && (this.lastName.length > 0) && (this.email.length > 0)){
+                    this.itemsArray.push(items);
+                    this.firstName = ' ';
+                    this.lastName = ' ';
+                    this.email = ' ';
+                    this.saveContacts();
+                    this.$emit('addContactToPage', items);
+                    this.closeModal();
+                }
+
             },
             saveContacts() {
                 let parsed = JSON.stringify(this.itemsArray);

@@ -32,7 +32,7 @@
         border: 1px solid #000;
         color: #333;
         background-color: #fff;
-        border-radius: 4px;
+        border-radius: 8px;
         font-size: 14px;
         font-family: 'Lato', sans-serif;
         outline: none;

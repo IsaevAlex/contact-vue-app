@@ -65,12 +65,9 @@
                 let items = {};
                 items[this.newName.trim()] = this.newValue.trim();
                 this.$emit('addValuesToContact', items);
-                // if(!items) return;
-                // this.itemsArray.push(items);
                 this.newName = ' ';
                 this.newValue = ' ';
                 items = {};
-                // this.saveContacts();
                 this.$emit('addContactToPage', items);
             },
             saveContacts() {

@@ -1,6 +1,6 @@
 <template>
     <div class="contactItem contactItem-mb">
-        <img src="https://www.fillmurray.com/460/300" class="contactItem__img" alt="">
+        <img src="../../assets/images/user-profile.svg" class="contactItem__img" alt="">
         <div class="contactItem__text">
             <h2 class="contactItem__name">
                 {{ firstName }} {{ lastName }}

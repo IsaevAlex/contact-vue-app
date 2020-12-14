@@ -14,7 +14,7 @@
         <div class="contactList__list" v-else>
             <h3 class="no-data">Нет контактов</h3>
         </div>
-        <v-confirm-modal type="remove" @removeContact="removeContact" @closeModal="closeModal" :show="modalShow"></v-confirm-modal>
+        <v-confirm-modal title="Удаление контакта" description="Вы действительно хотите удалить контакт?" type="remove" @removeContact="removeContact" @close="closeModal" :show="modalShow"></v-confirm-modal>
     </div>
 </template>
 

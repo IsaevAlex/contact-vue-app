@@ -1,6 +1,6 @@
 <template>
-    <div class="customInput" >
-        <input type="text" ref="input" :name="placeholder" class="customInput__input" :value="value" @input="updateValue($event.target.value)">
+    <div class="customInput" :class="{'customInput-error': error}">
+        <input type="text" ref="input" :name="placeholder" class="customInput__input"  :value="value" @input="updateValue($event.target.value)">
         <label class="customInput__placeholder" :for="placeholder">{{ placeholder }}</label>
     </div>
 </template>
@@ -12,6 +12,10 @@
             value:{
                 type: String,
                 default: ''
+            },
+            error:{
+                type: Boolean,
+                default: false
             },
             placeholder:{
                 type: String,
@@ -45,6 +49,11 @@
         border:1px solid #bcbaba;
         height:50px;
         padding-left:12px;
+        border-radius: 8px;
+
+        &-error{
+            border:1px solid red !important;
+        }
 
         &__placeholder{
             font-family: 'Lato', sans-serif;
