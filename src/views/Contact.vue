@@ -97,9 +97,12 @@
         },
         data(){
             return{
-                lastChanges:{
-                    oldKey: '',
-                    oldValue: ''
+                lastAction : {
+                    nameAction: '',
+                    nameField:'',
+                    valueField: '',
+                    indexField: null,
+                    indexContact: null,
                 },
                 values:{
                     key: {
@@ -127,21 +130,31 @@
             let contactId = this.$route.params.id;
             this.contact = this.contacts[contactId];
         },
-        watch:{
-          values(newVal, oldVal){
-              console.log(newVal, oldVal);
-          }
-        },
         methods:{
+            setLastAction(nameAction, nameField, valueField, indexField, indexContact){
+                this.lastAction.nameAction = nameAction;
+                this.lastAction.nameField = nameField;
+                this.lastAction.valueField = valueField;
+                this.lastAction.indexField = indexField;
+                this.lastAction.indexContact = indexContact;
+            },
             backStepAction(){
+                if (this.lastAction.nameAction === 'delete'){
+                    // let items = {};
+                    this.$set(this.contact, this.lastAction.nameField, this.lastAction.valueField);
+                    // this.contact[this.lastAction.nameField] = this.lastAction.valueField;
+                    // this.addValuesToContact(items);
+                    this.saveContacts(this.contacts);
+                }
+
                 // if (this.lastChanges.oldKey){
                 //     this.contact[this.lastChanges.oldKey] = this.contact[this.values.key.oldKey];
                 //     delete this.contact[this.values.key.newKey];
                 // }
-                if (this.lastChanges.oldValue){
-                    this.contact[this.values.key.newKey]  = this.lastChanges.oldValue;
-                }
-                this.saveContacts(this.contacts);
+                // if (this.lastChanges.oldValue){
+                //     this.contact[this.values.key.newKey]  = this.lastChanges.oldValue;
+                // }
+                // this.saveContacts(this.contacts);
             },
             exitEditContact(){
                 this.editForm = null;
@@ -150,16 +163,18 @@
             saveEditChanges(){
                 if (this.values.key.oldKey !== this.values.key.newKey) {
                     this.contact[this.values.key.newKey] = this.contact[this.values.key.oldKey];
-                    this.lastChanges.oldKey = this.values.key.oldKey;
                     delete this.contact[this.values.key.oldKey];
                 }
                 if (this.values.value.oldValue !== this.values.value.newValue){
-                    this.lastChanges.oldValue = this.values.value.oldValue;
                     this.contact[this.values.key.oldKey] = this.values.value.newValue;
                 }
+
+
                 this.editForm = null;
                 this.showSaveModal = false;
                 this.saveContacts(this.contacts);
+
+
 
             },
             editContactValue(value,key){
@@ -170,8 +185,9 @@
               this.values.value.oldValue = value;
             },
             removeValuesFromContact(){
-                delete this.contact[this.contactValueKey];
                 let contactId = this.$route.params.id;
+                this.setLastAction('delete', this.contactValueKey, this.contact[this.contactValueKey],Object.keys(this.contact).length, contactId);
+                delete this.contact[this.contactValueKey];
                 this.showRemoveModal = false;
                 this.contacts[contactId] = this.contact;
                 this.saveContacts(this.contacts);
@@ -205,6 +221,7 @@
                 this.contacts[contactId] = this.contact;
                 this.saveContacts(this.contacts);
                 this.showModal = false;
+                this.setLastAction('add', Object.keys(items).join(), Object.values(items).join(),Object.keys(this.contact).length, contactId);
             },
             saveContacts(contacts) {
                 let parsed = JSON.stringify(contacts.reverse());
