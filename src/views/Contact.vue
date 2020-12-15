@@ -1,13 +1,24 @@
 <template>
-    <div class="contactProfile contactProfile-margin">
-        <div class="contactProfile__profile">
-            <img class="contactProfile__img" src="../assets/images/user-profile.svg" alt="">
-            <v-button @click="openAddValuesModal" type="info">Добавить новые поля</v-button>
-            <v-button @click="backStepAction" type="success">Отменить действие</v-button>
-
+    <div class="contactProfileWrapper contactProfileWrapper-margin">
+        <div class="contactProfileWrapper__back">
+            <router-link to="/">
+                <v-button>Список контактов</v-button>
+            </router-link>
         </div>
-        <div class="contactProfile__content" >
-            <div v-for="(value, key) in contact" :key="key" class="contactProfile__item contactProfile__item-mb contactProfileItem">
+        <div class="contactProfile">
+            <div class="contactProfile__profile">
+            <img class="contactProfile__img" src="../assets/images/user-profile.svg" alt="">
+            <div class="contactProfile__btns">
+                <div class="contactProfile__btn contactProfile__btn-mb">
+                    <v-button @click="openAddValuesModal" size="full" type="info">Добавить новые поля</v-button>
+                </div>
+                <div class="contactProfile__btn">
+                    <v-button @click="backStepAction" size="full" type="success">Отменить действие</v-button>
+                </div>
+            </div>
+        </div>
+            <div class="contactProfile__content" >
+                <div v-for="(value, key) in contact" :key="key" class="contactProfile__item contactProfile__item-mb contactProfileItem">
                 <div v-if="editForm === key" class="contactProfileItem__edit contactProfileItemEdit">
                     <h5 class="contactProfileItemEdit__title contactProfileItemEdit__title-margin">Редактирование</h5>
                     <div class="contactProfileItemEdit__inputs">
@@ -40,8 +51,8 @@
                     </div>
                 </div>
             </div>
-        </div>
-        <v-confirm-modal
+            </div>
+            <v-confirm-modal
                 type="exit"
                 title="Отмена редактирования"
                 description="Вы действительно хотите отменить редактирование?"
@@ -49,23 +60,24 @@
                 @close="closeModal"
                 :show="showExitModal"
         />
-        <v-confirm-modal
+            <v-confirm-modal
                 type="save"
                 title="Редактирование записи"
                 description="Вы действительно хотите обновить запись?"
                 @saveEditChanges="saveEditChanges"
                 @close="closeSaveModal"
                 :show="showSaveModal"
-        />
-        <v-confirm-modal
+            />
+            <v-confirm-modal
                 type="remove"
                 title="Удаление записи"
                 description="Вы действительно хотите удалить запись?"
                 @removeContact="removeValuesFromContact"
                 @close="closeModal"
                 :show="showRemoveModal"
-        />
-        <v-add-values-to-contact-modal @addValuesToContact="addValuesToContact" @close="closeModal" :show="showModal"></v-add-values-to-contact-modal>
+            />
+            <v-add-values-to-contact-modal @addValuesToContact="addValuesToContact" @close="closeModal" :show="showModal"></v-add-values-to-contact-modal>
+        </div>
     </div>
 </template>
 
@@ -85,6 +97,10 @@
         },
         data(){
             return{
+                lastChanges:{
+                    oldKey: '',
+                    oldValue: ''
+                },
                 values:{
                     key: {
                         oldKey: '',
@@ -111,9 +127,21 @@
             let contactId = this.$route.params.id;
             this.contact = this.contacts[contactId];
         },
+        watch:{
+          values(newVal, oldVal){
+              console.log(newVal, oldVal);
+          }
+        },
         methods:{
             backStepAction(){
-                console.log('back action');
+                // if (this.lastChanges.oldKey){
+                //     this.contact[this.lastChanges.oldKey] = this.contact[this.values.key.oldKey];
+                //     delete this.contact[this.values.key.newKey];
+                // }
+                if (this.lastChanges.oldValue){
+                    this.contact[this.values.key.newKey]  = this.lastChanges.oldValue;
+                }
+                this.saveContacts(this.contacts);
             },
             exitEditContact(){
                 this.editForm = null;
@@ -122,10 +150,11 @@
             saveEditChanges(){
                 if (this.values.key.oldKey !== this.values.key.newKey) {
                     this.contact[this.values.key.newKey] = this.contact[this.values.key.oldKey];
+                    this.lastChanges.oldKey = this.values.key.oldKey;
                     delete this.contact[this.values.key.oldKey];
                 }
                 if (this.values.value.oldValue !== this.values.value.newValue){
-                    console.log(this.contact[this.values.key.oldValue]);
+                    this.lastChanges.oldValue = this.values.value.oldValue;
                     this.contact[this.values.key.oldKey] = this.values.value.newValue;
                 }
                 this.editForm = null;
@@ -175,6 +204,7 @@
                 this.contact = Object.assign(this.contact, items);
                 this.contacts[contactId] = this.contact;
                 this.saveContacts(this.contacts);
+                this.showModal = false;
             },
             saveContacts(contacts) {
                 let parsed = JSON.stringify(contacts.reverse());
@@ -185,6 +215,20 @@
 </script>
 
 <style lang="scss" scoped>
+    .contactProfileWrapper{
+        &-margin{
+                margin: 1em;
+
+                @media screen and (min-width: 500px) {
+                    margin: 2em;
+                }
+            }
+        &__back{
+            margin-bottom: 1em;
+        }
+
+    }
+
     .contactProfileItemEdit{
         &__title{
             font-size: 1.75em;
@@ -284,14 +328,6 @@
             grid-template-columns: 300px 700px;
         }
 
-        &-margin{
-            margin: 1em;
-
-            @media screen and (min-width: 500px) {
-                margin: 2em;
-            }
-        }
-
         &__item{
             &-mb{
                 margin-bottom: 1em;
@@ -301,6 +337,12 @@
         &__profile{
             display: flex;
             flex-direction: column;
+        }
+
+        &__btn{
+            &-mb{
+                margin-bottom: 8px;
+            }
         }
 
         &__img{

@@ -63,6 +63,12 @@
         box-shadow: 0 3rem 6rem rgba(0, 0, 0, 0.1);
         cursor: pointer;
         transition: 0.2s;
+        min-width: 300px;
+
+        @media screen and (min-width: 400px) {
+            min-width: 400px;
+        }
+
         &-mb{
             margin-bottom: 1.5em;
         }
@@ -74,8 +80,8 @@
         &__img{
             display: block;
             width: 100%;
-            height: 12rem;
-            object-fit: cover;
+            height: 16rem;
+            object-fit: contain;
         }
         &__name{
             font-size: 1.5rem;
