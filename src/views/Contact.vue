@@ -114,8 +114,8 @@
                         newValue: ''
                     }
                 },
+                contactId: this.$route.params.id,
                 showSaveModal: false,
-                title: 'qweqwe',
                 contact: null,
                 contacts: [],
                 showModal: false,
@@ -140,21 +140,22 @@
             },
             backStepAction(){
                 if (this.lastAction.nameAction === 'delete'){
-                    // let items = {};
                     this.$set(this.contact, this.lastAction.nameField, this.lastAction.valueField);
-                    // this.contact[this.lastAction.nameField] = this.lastAction.valueField;
-                    // this.addValuesToContact(items);
+                    this.saveContacts(this.contacts);
+                    this.setLastAction('add', this.lastAction.nameField, this.lastAction.valueField, this.lastAction.nameField, this.contactId )
+                }
+                else if (this.lastAction.nameAction === 'add'){
+                    this.setLastAction('delete', this.lastAction.nameField, this.lastAction.valueField, this.lastAction.nameField, this.contactId );
+                    this.$delete(this.contact, this.lastAction.nameField);
+                    this.contacts[this.contactId] = this.contact;
                     this.saveContacts(this.contacts);
                 }
+                else if (this.lastAction.nameAction === 'change'){
+                    if (this.values.key.oldKey !== this.values.key.newKey) {
+                        console.log('change');
+                    }
+                }
 
-                // if (this.lastChanges.oldKey){
-                //     this.contact[this.lastChanges.oldKey] = this.contact[this.values.key.oldKey];
-                //     delete this.contact[this.values.key.newKey];
-                // }
-                // if (this.lastChanges.oldValue){
-                //     this.contact[this.values.key.newKey]  = this.lastChanges.oldValue;
-                // }
-                // this.saveContacts(this.contacts);
             },
             exitEditContact(){
                 this.editForm = null;
@@ -163,11 +164,13 @@
             saveEditChanges(){
                 if (this.values.key.oldKey !== this.values.key.newKey) {
                     this.contact[this.values.key.newKey] = this.contact[this.values.key.oldKey];
+                    this.setLastAction('change', this.values.key.oldKey, this.contact[this.values.key.oldKey]);
                     delete this.contact[this.values.key.oldKey];
                 }
                 if (this.values.value.oldValue !== this.values.value.newValue){
                     this.contact[this.values.key.oldKey] = this.values.value.newValue;
                 }
+
 
 
                 this.editForm = null;
