@@ -12,14 +12,14 @@
                 <div class="contactProfile__btn contactProfile__btn-mb">
                     <v-button @click="openAddValuesModal" size="full" type="info">Добавить новые поля</v-button>
                 </div>
-                <div class="contactProfile__btn">
+                <div class="contactProfile__btn" v-if="lastAction.nameAction.length > 0">
                     <v-button @click="backStepAction" size="full" type="success">Отменить действие</v-button>
                 </div>
             </div>
         </div>
-            <div class="contactProfile__content" >
+            <div class="contactProfile__content"  v-if="Object.keys(this.contact).length > 0" >
                 <div v-for="(value, key) in contact" :key="key" class="contactProfile__item contactProfile__item-mb contactProfileItem">
-                <div v-if="editForm === key" class="contactProfileItem__edit contactProfileItemEdit">
+                    <div v-if="editForm === key" class="contactProfileItem__edit contactProfileItemEdit">
                     <h5 class="contactProfileItemEdit__title contactProfileItemEdit__title-margin">Редактирование</h5>
                     <div class="contactProfileItemEdit__inputs">
                         <div class="contactProfileItemEdit__input">
@@ -38,7 +38,7 @@
                         </div>
                     </div>
                 </div>
-                <div v-else class="contactProfileItem__info">
+                    <div v-else class="contactProfileItem__info">
                     <span class="contactProfileItem__subTitle contactProfileSubTitle">{{ key }}</span>
                     <span class="contactProfileItem__title contactProfileTitle">{{ value }}</span>
                     <div class="contactProfileItem__btns contactProfileItem__btns-mt">
@@ -50,7 +50,10 @@
                         </div>
                     </div>
                 </div>
+                </div>
             </div>
+            <div v-else class="contactProfile__empty">
+                <h2 class="no-data">Отсутствуют поля</h2>
             </div>
             <v-confirm-modal
                 type="exit"
@@ -151,9 +154,34 @@
                     this.saveContacts(this.contacts);
                 }
                 else if (this.lastAction.nameAction === 'change'){
-                    if (this.values.key.oldKey !== this.values.key.newKey) {
-                        console.log('change');
+                    // if (this.values.value.oldValue !== this.values.value.newValue){
+                    //     this.$set(this.contact, this.lastAction.nameField, this.lastAction.valueField);
+                    //     this.setLastAction('change', this.values.key.newKey, this.lastAction.valueField, this.lastAction.nameField, this.contactId );
+                    // }
+                    if (this.values.key.oldKey !== this.values.key.newKey || this.values.value.oldValue !== this.values.value.newValue ) {
+                        this.$set(this.contact, this.lastAction.nameField, this.lastAction.valueField);
+                        this.setLastAction('change', this.values.key.newKey, this.lastAction.valueField, this.lastAction.indexField, this.contactId );
+
+                        // this.contacts[this.contactId] = this.contact;
+                        if (this.values.key.oldKey !== this.values.key.newKey){
+                            this.$delete(this.contact, this.lastAction.indexField);
+                        }
+
+                        this.saveContacts(this.contacts);
+
+                        // delete this.contact[this.values.key.newKey];
                     }
+
+                    // if(nameAction === 'change') {
+                    //     const lastNameField = path[indexField].name;
+                    //     const lastValueField = path[indexField].value;
+                    //     Vue.set(path, indexField, {
+                    //         name: nameField,
+                    //         value: valueField,
+                    //     });
+                    //     pathLastAction.nameField = lastNameField;
+                    //     pathLastAction.valueField = lastValueField;
+                    // }
                 }
 
             },
@@ -162,14 +190,19 @@
                 this.showExitModal = false;
             },
             saveEditChanges(){
-                if (this.values.key.oldKey !== this.values.key.newKey) {
-                    this.contact[this.values.key.newKey] = this.contact[this.values.key.oldKey];
-                    this.setLastAction('change', this.values.key.oldKey, this.contact[this.values.key.oldKey]);
-                    delete this.contact[this.values.key.oldKey];
-                }
                 if (this.values.value.oldValue !== this.values.value.newValue){
                     this.contact[this.values.key.oldKey] = this.values.value.newValue;
+                    // this.setLastAction('change', this.values.key.oldKey, this.values.value.newValue, this.values.key.newValue);
+
                 }
+
+                if (this.values.key.oldKey !== this.values.key.newKey) {
+                    this.contact[this.values.key.newKey] = this.contact[this.values.key.oldKey];
+                    // this.setLastAction('change', this.values.key.oldKey, this.contact[this.values.key.oldKey], this.values.key.newKey);
+                    delete this.contact[this.values.key.oldKey];
+                }
+
+                this.setLastAction('change', this.values.key.oldKey, this.values.value.oldValue, this.values.key.newKey, this.contactId);
 
 
 
@@ -235,6 +268,7 @@
 </script>
 
 <style lang="scss" scoped>
+
     .contactProfileWrapper{
         &-margin{
                 margin: 1em;

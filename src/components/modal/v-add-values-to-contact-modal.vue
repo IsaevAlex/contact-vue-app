@@ -15,18 +15,25 @@
         </div>
         <div slot="footer">
             <div class="addContactModal__footer">
-                <div class="addContactModal__btn addContactModal__btn-mr addContactModal__btn-close">
-                    <v-button @click="closeModal">Закрыть</v-button>
+                <div class="addContactModal__error addContactModal__error-margin">
+                    <span class="errorText">{{ errorText }}</span>
                 </div>
-                <div class="addContactModal__btn addContactModal__btn-submit">
-                    <v-button @click="addValuesToContact" type="info">Добавить поля</v-button>
+                <div class="addContactModal__btns">
+                    <div class="addContactModal__btn addContactModal__btn-mr addContactModal__btn-close">
+                        <v-button @click="closeModal">Закрыть</v-button>
+                    </div>
+                    <div class="addContactModal__btn addContactModal__btn-submit">
+                        <v-button @click="addValuesToContact" type="info">Добавить поля</v-button>
+                    </div>
                 </div>
+
             </div>
         </div>
     </v-modal>
 </template>
 
 <script>
+    import checkLengthMixin from '@/mixins/checkLengthMixin';
     import VInput from '@/components/input/v-input';
     import VButton from '@/components/button/v-button';
     import VModal from '@/components/modal/v-modal';
@@ -37,6 +44,9 @@
             VButton,
             VInput
         },
+        mixins:[
+            checkLengthMixin
+        ],
         props:{
             show:{
                 type: Boolean,
@@ -51,7 +61,8 @@
                 },
                 newName: '',
                 newValue: '',
-                itemsArray: []
+                itemsArray: [],
+                errorText: ''
             }
         },
         created() {
@@ -60,15 +71,22 @@
         methods:{
             closeModal(){
                 this.$emit('close');
+                this.errorText = '';
             },
             addValuesToContact(){
-                let items = {};
-                items[this.newName.trim()] = this.newValue.trim();
-                this.$emit('addValuesToContact', items);
-                this.newName = ' ';
-                this.newValue = ' ';
-                items = {};
-                this.$emit('addContactToPage', items);
+                if (this.checkLengthValueInInput(this.newName.length, this.newValue.length)){
+                    let items = {};
+                    items[this.newName.trim()] = this.newValue.trim();
+                    this.$emit('addValuesToContact', items);
+                    this.newName = ' ';
+                    this.newValue = ' ';
+                    items = {};
+                    this.$emit('addContactToPage', items);
+                    this.errorText = '';
+                }
+                else{
+                    this.errorText = 'Все поля должны быть заполнены';
+                }
             },
             saveContacts() {
                 let parsed = JSON.stringify(this.itemsArray);
@@ -83,8 +101,25 @@
     .addContactModal{
         &__footer{
             display: flex;
+            align-items: center;
+            flex-wrap: wrap;
             justify-content: flex-end;
+
+            @media screen and (min-width: 600px) {
+                justify-content: space-between;
+            }
         }
+        &__error{
+            &-margin{
+                margin-right: 8px;
+                margin-bottom: 9px;
+            }
+        }
+
+        &__btns{
+            display: flex;
+        }
+
         &__btn{
             &-mr{
                 margin-right: 8px;
