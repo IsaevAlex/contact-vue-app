@@ -154,22 +154,55 @@
                     this.saveContacts(this.contacts);
                 }
                 else if (this.lastAction.nameAction === 'change'){
-                    // if (this.values.value.oldValue !== this.values.value.newValue){
-                    //     this.$set(this.contact, this.lastAction.nameField, this.lastAction.valueField);
-                    //     this.setLastAction('change', this.values.key.newKey, this.lastAction.valueField, this.lastAction.nameField, this.contactId );
-                    // }
                     if (this.values.key.oldKey !== this.values.key.newKey || this.values.value.oldValue !== this.values.value.newValue ) {
-                        this.$set(this.contact, this.lastAction.nameField, this.lastAction.valueField);
-                        this.setLastAction('change', this.values.key.newKey, this.lastAction.valueField, this.lastAction.indexField, this.contactId );
 
-                        // this.contacts[this.contactId] = this.contact;
+                        this.$set(this.contact, this.lastAction.nameField, this.values.value.oldValue);
+
                         if (this.values.key.oldKey !== this.values.key.newKey){
-                            this.$delete(this.contact, this.lastAction.indexField);
+                            this.$delete(this.contact, this.lastAction.indexField );
+                            let tmp = this.lastAction.indexField;
+                            this.lastAction.indexField = this.lastAction.nameField;
+                            this.lastAction.nameField = tmp;
+
+
                         }
 
-                        this.saveContacts(this.contacts);
+                        let tmpValue = this.values.value.newValue;
+                        this.values.value.newValue = this.values.value.oldValue;
+                        this.values.value.oldValue = tmpValue;
 
-                        // delete this.contact[this.values.key.newKey];
+                        this.contacts[this.contactId] = this.contact;
+
+
+
+
+
+
+
+                        // let tmpValue = this.lastAction.nameField;
+                        // this.lastAction.nameField = this.values.value.newValue;
+                        // this.values.value.oldValue = tmpValue;
+
+
+
+                        // const lastNameField = this.lastAction.nameField;
+                        // const lastValueField = this.contact[this.lastAction.nameField];
+                        // this.$set(this.contact, this.lastAction.nameField, this.lastAction.valueField);
+                        //
+
+                        // this.lastAction.nameField = lastNameField;
+                        // this.lastAction.valueField = lastValueField;
+
+
+                        // this.$set(this.contact, this.lastAction.nameField, this.lastAction.valueField);
+                        // // this.setLastAction('change', this.values.key.newKey, this.lastAction.valueField, this.lastAction.indexField, this.contactId );
+                        //
+                        // this.setLastAction('change', this.values.key.oldKey, this.values.value.oldValue, this.values.key.newKey, this.contactId);
+                        // // this.contacts[this.contactId] = this.contact;
+                        //
+                        //
+
+                        this.saveContacts(this.contacts);
                     }
 
                     // if(nameAction === 'change') {
@@ -202,16 +235,15 @@
                     delete this.contact[this.values.key.oldKey];
                 }
 
-                this.setLastAction('change', this.values.key.oldKey, this.values.value.oldValue, this.values.key.newKey, this.contactId);
-
-
+                this.setLastAction('change',
+                                    this.values.key.oldKey,
+                                    this.values.value.oldValue,
+                                    this.values.key.newKey,
+                                    this.contactId);
 
                 this.editForm = null;
                 this.showSaveModal = false;
                 this.saveContacts(this.contacts);
-
-
-
             },
             editContactValue(value,key){
               this.editForm = key;
