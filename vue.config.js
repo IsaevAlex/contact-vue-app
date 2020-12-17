@@ -1,3 +1,3 @@
 module.exports = {
-    publicPath: ‘/contact-vue-app/’
+    publicPath: `/contact-vue-app/`
 }
