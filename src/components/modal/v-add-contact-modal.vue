@@ -73,12 +73,7 @@
         },
         watch:{
             show(value){
-                if (value){
-                    this.autofocus = true;
-                }
-                else{
-                    this.autofocus = false;
-                }
+                this.autofocus = !!value;
             }
         },
         created() {

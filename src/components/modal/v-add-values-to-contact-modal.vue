@@ -6,7 +6,7 @@
         <div slot="body">
             <div class="addContactModal__body">
                 <div class="addContactModal__input addContactModal__input-mb">
-                    <v-input :placeholder="placeholders.newName" v-model="newName"></v-input>
+                    <v-input :autofocus="autofocus" :placeholder="placeholders.newName" v-model="newName"></v-input>
                 </div>
                 <div class="addContactModal__input addContactModal__input-mb">
                     <v-input :placeholder="placeholders.newValue" v-model="newValue"></v-input>
@@ -66,7 +66,13 @@
                 newName: '',
                 newValue: '',
                 itemsArray: [],
-                errorText: ''
+                errorText: '',
+                autofocus: false
+            }
+        },
+        watch:{
+            show(value){
+                this.autofocus = !!value;
             }
         },
         created() {
