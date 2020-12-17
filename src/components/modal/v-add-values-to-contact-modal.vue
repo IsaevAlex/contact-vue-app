@@ -48,6 +48,10 @@
             checkLengthMixin
         ],
         props:{
+            contact: {
+              type: Object,
+              required: true
+            },
             show:{
                 type: Boolean,
                 default:false
@@ -75,14 +79,20 @@
             },
             addValuesToContact(){
                 if (this.checkLengthValueInInput(this.newName.length, this.newValue.length)){
-                    let items = {};
-                    items[this.newName.trim()] = this.newValue.trim();
-                    this.$emit('addValuesToContact', items);
-                    this.newName = ' ';
-                    this.newValue = ' ';
-                    items = {};
-                    this.$emit('addContactToPage', items);
-                    this.errorText = '';
+                    if (this.checkExistsKey(this.contact, this.newName)){
+                        let items = {};
+                        items[this.newName.trim()] = this.newValue.trim();
+                        this.$emit('addValuesToContact', items);
+                        this.newName = ' ';
+                        this.newValue = ' ';
+                        items = {};
+                        this.$emit('addContactToPage', items);
+                        this.errorText = '';
+                    }
+                    else{
+                        this.errorText = 'Такое свойство уже существует';
+                    }
+
                 }
                 else{
                     this.errorText = 'Все поля должны быть заполнены';

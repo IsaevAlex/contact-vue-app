@@ -7,6 +7,14 @@ export default {
                 }
             }
             return true;
+        },
+        checkExistsKey(obj, key){
+            for (let prop in obj){
+                if (prop === key){
+                    return false;
+                }
+            }
+            return true;
         }
     }
 };

@@ -79,7 +79,7 @@
                 @close="closeModal"
                 :show="showRemoveModal"
             />
-            <v-add-values-to-contact-modal @addValuesToContact="addValuesToContact" @close="closeModal" :show="showModal"></v-add-values-to-contact-modal>
+            <v-add-values-to-contact-modal :contact="contact" @addValuesToContact="addValuesToContact" @close="closeModal" :show="showModal"></v-add-values-to-contact-modal>
         </div>
     </div>
 </template>
