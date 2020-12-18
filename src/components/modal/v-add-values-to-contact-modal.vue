@@ -75,9 +75,6 @@
                 this.autofocus = !!value;
             }
         },
-        created() {
-            this.itemsArray = localStorage.getItem('contacts') ? JSON.parse(localStorage.getItem('contacts')).reverse() : [];
-        },
         methods:{
             closeModal(){
                 this.$emit('close');
@@ -103,12 +100,7 @@
                 else{
                     this.errorText = 'Все поля должны быть заполнены';
                 }
-            },
-            saveContacts() {
-                let parsed = JSON.stringify(this.itemsArray);
-                localStorage.setItem('contacts', parsed);
             }
-
         }
     }
 </script>

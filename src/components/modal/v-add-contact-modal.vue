@@ -76,9 +76,6 @@
                 this.autofocus = !!value;
             }
         },
-        created() {
-            this.itemsArray = localStorage.getItem('contacts') ? JSON.parse(localStorage.getItem('contacts')) : [];
-        },
         methods:{
             closeModal(){
                 this.$emit('close');
@@ -95,7 +92,7 @@
                     this.firstName = ' ';
                     this.lastName = ' ';
                     this.email = ' ';
-                    this.saveContacts();
+                    // this.saveContacts();
                     this.$emit('addContactToPage', items);
                     this.closeModal();
                 }
@@ -103,10 +100,6 @@
                     this.errorText = 'Все поля должны быть заполненными';
                 }
 
-            },
-            saveContacts() {
-                let parsed = JSON.stringify(this.itemsArray);
-                localStorage.setItem('contacts', parsed);
             }
 
         }

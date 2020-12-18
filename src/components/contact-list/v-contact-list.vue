@@ -45,9 +45,12 @@
                 this.contactIndex = index;
             },
             removeContact(){
-                this.contacts.splice(this.contactIndex, 1);
+                if (this.contactIndex > -1) {
+                    this.contacts.splice(this.contactIndex, 1);
+                }
                 localStorage.setItem('contacts', JSON.stringify(this.contacts));
                 this.closeModal();
+                this.$emit('removeItems', this.contactIndex);
             },
             closeModal(){
                 this.modalShow = false;
