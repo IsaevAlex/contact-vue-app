@@ -32,7 +32,8 @@
 
 Тестовое задание должно быть предоставлено в следующем виде:
 - Ссылка на публичный репозиторий (GitHub, BitBucket, GitLab) с исходным кодом.
-- Ссылка на сайт для тестирования функционала. Или Dockerfile и docker-compose.yaml, позволяющие развернуть локально командой docker-compose up работоспособную копию сайта.
+- Ссылка на сайт для тестирования функционала. Или Dockerfile и docker-compose.yaml,
+ позволяющие развернуть локально командой docker-compose up работоспособную копию сайта.
 ```
 ##
 
@@ -63,3 +64,8 @@ npm run lint
 
 ### Справочник по конфигурациям (Customize configuration)
 See [Configuration Reference](https://cli.vuejs.org/config/).
+
+##
+
+## Ccылка на проект (Demo)
+See [List of contacts](https://isaevalex.github.io/contact-vue-app/#/).
